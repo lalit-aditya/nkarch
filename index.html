@@ -113,17 +113,16 @@
     /* Burger — hidden on desktop */
     .nav-burger {
       display: none; flex-direction: column; justify-content: center; gap: 5px;
-      width: 40px; height: 40px; cursor: pointer; background: none; border: none;
-      padding: 8px; margin-right: -8px; flex-shrink: 0;
+      width: 44px; height: 44px; cursor: pointer; background: none; border: none;
+      padding: 10px; margin-right: -10px; flex-shrink: 0;
       transition: opacity 0.3s;
     }
     .nav-burger span {
       display: block; height: 1.5px; width: 22px;
       transition: background 0.3s, transform 0.35s, opacity 0.25s; transform-origin: center;
     }
-    /* Burger colour: white on transparent nav, dark on solid nav */
-    .nav-burger span { background: rgba(255,255,255,0.9); }
-    .nav--solid .nav-burger span { background: var(--dark); }
+    /* Always dark — readable on both transparent overlay and solid white nav */
+    .nav-burger span { background: var(--dark); }
     .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .nav-burger.open span:nth-child(2) { opacity: 0; }
     .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
@@ -169,13 +168,15 @@
     #card,
     #fg-card {
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 100vw; height: 100vh;
       overflow: hidden;
       border-radius: 0;
       z-index: 10;
       background: #111;
-      will-change: left, top, width, height, border-radius;
+      will-change: transform, width, height, border-radius;
     }
 
     #fg-card {
@@ -633,10 +634,21 @@
     /* ── Tablet & below: switch to burger nav ───────────────────── */
     @media (max-width: 1024px) {
       .nav-links, .nav-cta { display: none; }
-      .nav-burger { display: flex; pointer-events: auto; }
+      /* Burger always visible and tappable — no dependency on nav--solid */
+      .nav-burger {
+        display: flex !important;
+        pointer-events: auto !important;
+        opacity: 1 !important;
+      }
+      /* Nav always interactive so burger is tappable from first load */
       .nav { pointer-events: auto; }
+      /* Logo always visible — no scroll needed on mobile/tablet */
       .nav-logo { opacity: 1; pointer-events: auto; }
+      /* Brand text too wide for mobile, hides behind burger */
       .nav-frame1-brand { display: none; }
+      /* On solid nav, burger spans already dark; on transparent nav make it readable */
+      .nav-burger span { background: rgba(255,255,255,0.9); }
+      .nav--solid .nav-burger span { background: var(--dark); }
     }
 
     /* ── Mobile ─────────────────────────────────────────────────── */
@@ -1279,14 +1291,12 @@
         }
       });
 
-      /* Both cards shrink from centre:
-         left animates to getSidePx()  → left edge pulls in equally
-         width shrinks to getCardW()vw → right edge pulls in equally
-         top  animates to getCardTop() → vertically centred
-         NO x/y transform — using positional props so both edges move symmetrically */
+      /* Card is anchored at left:50% so width reduction is perfectly symmetric.
+         We only animate: width (shrinks from centre), height, y (vertical centre),
+         borderRadius, boxShadow.
+         No x needed — the left:50% anchor does the horizontal centring for free. */
       tl.to([card, fgCard], {
-        left:         () => getSidePx() + 'px',
-        top:          () => getCardTop() + 'px',
+        y:            () => getCardTop(),
         width:        () => getCardW() + 'vw',
         height:       () => getFinalH() + 'px',
         borderRadius: () => { const r = Math.min(RADIUS, window.innerWidth * 0.08); return r + 'px ' + r + 'px 0 0'; },
@@ -1295,11 +1305,9 @@
         ease: 'power2.inOut',
       }, 0);
 
-      /* Images stay world-locked: counter-translate only needs to compensate
-         for the card's positional shift (left & top), not a CSS transform.
-         The image's own --hero-layer-left already handles horizontal centring. */
+      /* Images: counter-translate Y only — horizontal is already centred via card anchor.
+         --hero-layer-left already centres the image inside the card horizontally. */
       tl.to([heroImg, fgBuildImg], {
-        x: () => -getSidePx(),
         y: () => -getCardTop(),
         duration: 0.55,
         ease: 'power2.inOut',
