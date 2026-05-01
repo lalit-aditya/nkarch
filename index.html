@@ -206,7 +206,7 @@
     /* Hero text overlay */
     .hero-overlay {
       position: absolute; inset: 0; 
-      z-index: 35;
+      z-index: 200;
       display: flex; flex-direction: column;
       justify-content: center; align-items: flex-start;
       padding: 100px var(--px) 80px; pointer-events: none;
@@ -257,7 +257,7 @@
     @keyframes bounce-arrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
     .hero-scroll-indicator {
       position: absolute; bottom: 32px; right: var(--px);
-      display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 6;
+      display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 200;
     }
     .hero-scroll-indicator span {
       font-family: var(--font-gothic); font-size: 7px; letter-spacing: 0.4em; text-transform: uppercase;
@@ -349,6 +349,7 @@
     .works-carousel-area {
       position: relative; overflow: hidden;
       padding: clamp(48px,7vw,100px) 0 0 var(--px);
+      -webkit-overflow-scrolling: touch;
     }
     .works-slides-track {
       display: flex; gap: 18px; align-items: flex-end; padding-bottom: clamp(48px,7vw,100px);
@@ -600,27 +601,77 @@
     .reveal-d3 { transition-delay: 0.40s; }
 
     /* RESPONSIVE */
+
+    /* ── Tablet landscape ───────────────────────────────────────── */
     @media (max-width: 1100px) {
       .flip-cards-grid { grid-template-columns: repeat(2,1fr); }
       .method-grid { grid-template-columns: repeat(2,1fr); }
       .works-inner { grid-template-columns: 1fr; }
       .works-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.06); }
+      .svc-row { grid-template-columns: 2.5rem 1fr auto; }
     }
+
+    /* ── Tablet portrait ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      :root { --px: clamp(20px, 5vw, 48px); }
+      .hero-heading { font-size: clamp(38px, 7vw, 72px); }
+      .hero-sub { font-size: 12px; max-width: 90%; margin-bottom: 36px; }
+      .works-heading { font-size: clamp(26px, 5vw, 44px); }
+      .works-slide { min-width: min(72vw, 380px); }
+      .section-services { padding: clamp(48px,7vw,96px) var(--px); }
+      .svc-name { font-size: clamp(20px, 3vw, 36px); }
+    }
+
+    /* ── Mobile ─────────────────────────────────────────────────── */
     @media (max-width: 768px) {
+      :root { --px: 20px; }
       .nav-links, .nav-cta { display: none; }
       .nav-burger { display: flex; }
       .nav-drawer { display: flex; }
-      .hero-overlay { padding: 90px 24px 60px; }
+
+      /* Hero text */
+      .hero-overlay { padding: 80px 20px 56px; justify-content: flex-end; padding-bottom: 80px; }
+      .hero-heading { font-size: clamp(36px, 9.5vw, 60px); margin-bottom: 16px; }
+      .hero-sub { font-size: 11.5px; line-height: 1.9; margin-bottom: 32px; max-width: 100%; }
+      .hero-eyebrow { font-size: 8px; margin-bottom: 14px; }
+      .hero-explore-btn { padding: 13px 24px; font-size: 8px; }
+      .hero-scroll-indicator { right: 20px; bottom: 24px; }
+
+      /* Sections */
       .section-intro { grid-template-columns: 1fr; gap: 32px; }
       .stats-cards { grid-template-columns: 1fr 1fr; }
       .stats-cards .stat-card:nth-child(3) { grid-column: 1/-1; }
       .section-contact { grid-template-columns: 1fr; gap: 40px; }
       .form-row { grid-template-columns: 1fr; }
       .form-tab { font-size: 7.5px; padding: 11px 4px; }
+
+      /* Works carousel */
+      .works-slide { min-width: min(80vw, 340px); }
+      .works-heading { font-size: clamp(24px, 7vw, 40px); }
+
+      /* Services list */
+      .svc-row { grid-template-columns: 2rem 1fr auto; gap: 0 clamp(12px,2vw,28px); padding: 18px 0; }
+      .svc-name { font-size: clamp(18px, 5vw, 28px); }
+      .svc-arrow { font-size: 14px; }
+
+      /* Methodology */
+      .method-grid { grid-template-columns: repeat(2,1fr); }
+
+      /* Quote */
+      .quote-text { font-size: clamp(16px, 4.5vw, 26px); }
+
+      /* Footer */
+      footer { padding: 28px 20px; }
     }
+
+    /* ── Small mobile ───────────────────────────────────────────── */
     @media (max-width: 600px) {
       .flip-cards-grid { grid-template-columns: 1fr; }
+      .works-slide { min-width: 88vw; }
+      .hero-heading { font-size: clamp(32px, 10vw, 52px); }
+      .intro-heading { font-size: clamp(28px, 8vw, 44px); }
     }
+
     @media (max-width: 540px) {
       .method-grid { grid-template-columns: 1fr; }
       .method-cell { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
@@ -628,6 +679,21 @@
       .stats-cards .stat-card:nth-child(3) { grid-column: 1; }
       footer { flex-direction: column; text-align: center; }
       .f-links { flex-wrap: wrap; justify-content: center; }
+      .svc-row { grid-template-columns: 1.8rem 1fr auto; }
+      .svc-num { font-size: 9px; }
+
+      /* Contact form full-width tabs */
+      .form-tabs { flex-direction: column; }
+      .form-tab { text-align: center; padding: 12px 8px; border-bottom: 1px solid rgba(0,0,0,0.07); }
+      .form-tab:last-child { border-bottom: none; }
+    }
+
+    /* ── Very small (≤380px) ────────────────────────────────────── */
+    @media (max-width: 380px) {
+      .hero-heading { font-size: 30px; }
+      .hero-btn-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .works-slide { min-width: 92vw; }
+      .nav-frame1-brand { font-size: 9px; letter-spacing: 0.22em; }
     }
   </style>
 </head>
@@ -671,26 +737,26 @@
     <div id="card">
       <img id="hero-img" src="bg.jpg" width="2752" height="1536" alt="Sunil's Enclave — NK Architects">
       <div class="card-dark-overlay"></div>
-
-      <!-- Hero text overlay: fades out as scroll progresses -->
-      <div class="hero-overlay" id="heroOverlay">
-        <p class="hero-eyebrow">Est. 2009 &nbsp;·&nbsp; Chennai, Tamil Nadu</p>
-        <h1 class="hero-heading">Architecture<br>Born of <em>Purpose.</em></h1>
-        <p class="hero-sub">Where structural precision meets timeless design — spaces that endure beyond their era.</p>
-        <div class="hero-btn-row">
-          <a href="#intro" class="hero-explore-btn">Explore <span class="btn-arrow"></span></a>
-        </div>
-      </div>
-
-      <div class="hero-scroll-indicator">
-        <span>Scroll</span>
-        <div class="scroll-line"></div>
-      </div>
     </div>
 
     <!-- Foreground card: same geometry as #card, building PNG breaks out above -->
     <div id="fg-card" aria-hidden="true">
       <img id="fg-building-img" src="building-transparent.png" width="2752" height="1536" alt="">
+    </div>
+
+    <!-- Hero text overlay: above both cards, fades out as scroll progresses -->
+    <div class="hero-overlay" id="heroOverlay">
+      <p class="hero-eyebrow">Est. 2009 &nbsp;·&nbsp; Chennai, Tamil Nadu</p>
+      <h1 class="hero-heading">Architecture<br>Born of <em>Purpose.</em></h1>
+      <p class="hero-sub">Where structural precision meets timeless design — spaces that endure beyond their era.</p>
+      <div class="hero-btn-row">
+        <a href="#intro" class="hero-explore-btn">Explore <span class="btn-arrow"></span></a>
+      </div>
+    </div>
+
+    <div class="hero-scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
     </div>
 
   </section>
@@ -1202,7 +1268,7 @@
         y: () => getFinalTopY(),
         width:        () => getCardW() + 'vw',
         height:       () => getFinalH() + 'px',
-        borderRadius: () => Math.min(RADIUS, window.innerWidth * 0.08) + 'px',
+        borderRadius: () => { const r = Math.min(RADIUS, window.innerWidth * 0.08); return r + 'px ' + r + 'px 0 0'; },
         boxShadow:    '0 48px 120px rgba(0,0,0,0.35)',
         duration: 0.55,
         ease: 'power2.inOut',
